@@ -78,5 +78,5 @@ RUN     bash -c ' \
 
 RUN     mkdir -p /usr/local/bin
 COPY    files/init-container.sh /usr/local/bin/init-container.sh
-COPY    files/build-iso.sh /usr/local/bin/rebuild-iso.sh
+COPY    files/rebuild-iso.sh /usr/local/bin/rebuild-iso.sh
 COPY    files/rpmmacros /home/builder/.rpmmacros
