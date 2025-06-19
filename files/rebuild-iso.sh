@@ -27,12 +27,11 @@ download_iso() {
     fi
     [ -d "${output_dir}" ] || die "'${output_dir}' is not a directory"
 
-    echo -e "\nDownloading ISO..."
-    echo "URL: ${iso_url}"
+    echo "Download from URL: ${iso_url}"
     curl -L -# --fail -o "${output_dir}/${output_file}" "${iso_url}"
     test -r "${output_dir}/${output_file}" || die "Failed to download ISO."
 
-    echo -e "\nValidating checksum..."
+    echo -e "\nChecksum validation:"
     local original_checksum=$(curl -L -s --fail "${iso_index}/SHA256SUMS" | grep "${output_file}" | awk '{print $1}')
     local actual_checksum=$(sha256sum "${output_dir}/${output_file}" | awk '{print $1}')
     echo "Original: ${original_checksum}"
@@ -40,11 +39,6 @@ download_iso() {
     [[ "${actual_checksum}" == "${original_checksum}" ]] || die "Checksum validation failed."
     
     LTS_ISO="${output_dir}/${output_file}"
-}
-
-get_version() {
-    local iso_url="$1"
-    local iso_index=$(dirname "${iso_url}")
     VERSION=$(dirname "${iso_index}")
 }
 
@@ -114,23 +108,26 @@ command -v isohybrid >/dev/null || die "required tool not found: isohybrid (sysl
 command -v createrepo_c >/dev/null || die "required tool not found: createrepo_c"
 
 # Step 1 - Download LTS ISO
+echo -e "\nStep 1 - Downloading ISO..."
 download_iso "${ISO_URL}" "${OUT_DIR}"
 
 # Step 2 - Mount LTS ISO
+echo -e "\nStep 2 - Mounting ISO..."
 ISO_DIR=${OUT_DIR}/build
-mkdir ${OUT_DIR}/tmp
+mkdir -p ${OUT_DIR}/tmp
 mount -o loop ${LTS_ISO} ${OUT_DIR}/tmp
 cp -a ${OUT_DIR}/tmp ${ISO_DIR}
 umount ${OUT_DIR}/tmp && rm -rf ${OUT_DIR}/tmp
 chmod a+w ${ISO_DIR} -R
 
 # Step 3 - Patch
+echo -e "\nStep 3 - Patching RPM packages..."
 rm -rf ${ISO_DIR}/repodata
 cp ${RPM_DIR}/* ${ISO_DIR}/Packages/.
 createrepo_c ${ISO_DIR} -o ${ISO_DIR}
 
 # Step 4 - Rebuild
-get_version
+echo -e "\nStep 4 - Building ISO..."
 BUILD_ISO="${OUT_DIR}/xcp-ng-${VERSION}-ws.iso"
 genisoimage \
     -o "${BUILD_ISO}" \
