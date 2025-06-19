@@ -1,0 +1,43 @@
+name: XCP-ng RPM packages build environment
+
+on:
+  push:
+    branches: [ "release/hydron" ]
+    tags: [ "hydron-*" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare environment
+        run: |
+          source env.sh
+          VERSION=${GITHUB_REF##*/}
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "XCP_VERSION=${XCP_VERSION}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+
+      - name: Build and push environment image
+        shell: bash
+        env:
+          GCP_SA: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+        run: |
+          ./build.sh ${XCP_VERSION} "${IMAGE_NAME}:${IMAGE_TAG}"
+          ./push.sh "${IMAGE_NAME}:${IMAGE_TAG}"
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.VERSION }}
+          tag_name: ${{ env.VERSION }}
+          body: |
+            Whitestack XCP-ng build environment
+            - For XCP-ng ${{ env.XCP_VERSION }}
+          files: run.py
+          draft: false
+          prerelease: false
+          overwrite_files: true

@@ -38,13 +38,24 @@ RUN     yum install -y \
             sudo \
             yum-utils \
             epel-release \
-            epel-rpm-macros
+            epel-rpm-macros \
+            genisoimage \
+            syslinux \
+            grub-tools \
+            createrepo_c \
+            libfaketime \
+            bsdtar
 
 # Niceties
 RUN     yum install -y \
             vim \
             wget \
             which
+
+# EPEL packages
+RUN     yum install -y --enablerepo=epel \
+            gnupg1 \
+            lftp
 
 # OCaml in XS may be older than in CentOS
 RUN     sed -i "/gpgkey/a exclude=ocaml*" /etc/yum.repos.d/Cent* /etc/yum.repos.d/epel*
@@ -68,4 +79,5 @@ RUN     bash -c ' \
 
 RUN     mkdir -p /usr/local/bin
 COPY    files/init-container.sh /usr/local/bin/init-container.sh
+COPY    files/rebuild-iso.sh /usr/local/bin/rebuild-iso.sh
 COPY    files/rpmmacros /home/builder/.rpmmacros
