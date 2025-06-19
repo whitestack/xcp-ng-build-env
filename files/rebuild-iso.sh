@@ -39,7 +39,7 @@ download_iso() {
     [[ "${actual_checksum}" == "${original_checksum}" ]] || die "Checksum validation failed."
     
     LTS_ISO="${output_dir}/${output_file}"
-    VERSION=$(dirname "${iso_index}")
+    VERSION=$(basename "${iso_index}")
 }
 
 usage() {
