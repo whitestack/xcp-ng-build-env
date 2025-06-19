@@ -1,0 +1,21 @@
+name: XCP-ng RPM packages build environment
+
+on:
+  push:
+    branches: [ "release/hydron" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and push environment image
+        shell: bash
+        env:
+          GCP_SA: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+        run: |
+          source env.sh
+          ./build.sh ${XCP_VERSION} "${IMAGE_NAME}:${IMAGE_TAG}"
+          ./push.sh "${IMAGE_NAME}:${IMAGE_TAG}"
