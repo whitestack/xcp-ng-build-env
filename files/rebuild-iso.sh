@@ -47,11 +47,11 @@ usage() {
 Usage: $0 [arguments]
 
 Arguments:
-    -i|--iso-url <url>          (mandatory) upstream ISO URL
-    -r|--rpm-dir <dir>          (mandatory) custom RPM packages directory
-    -o|--out-dir <dir>          (mandatory) directory to place rebuild ISO
-    --force-overwrite           don't abort if output file already exists
-    --verbose                   be talkative
+    -t|--target <version>   (mandatory) target version
+    -i|--iso-url <url>      (mandatory) upstream ISO URL
+    -r|--rpm-dir <dir>      (mandatory) custom RPM packages directory
+    -o|--out-dir <dir>      (mandatory) directory to place rebuild ISO
+    -v|--verbose            be talkative
 EOF
 }
 
@@ -70,6 +70,11 @@ while [ $# -ge 1 ]; do
             ;;
         -v|--verbose)
             VERBOSE=-v
+            ;;
+        -t|--target)
+            [ $# -ge 2 ] || die_usage "$1 needs an argument"
+            TARGET="$2"
+            shift
             ;;
         -i|--iso-url)
             [ $# -ge 2 ] || die_usage "$1 needs an argument"
@@ -97,6 +102,7 @@ while [ $# -ge 1 ]; do
 done
 
 # Validations
+[ -n "$TARGET" ] || die "Target version must be specified"
 [ -d "$RPM_DIR" ] || die "'$RPM_DIR' is not a directory"
 [ -d "$OUT_DIR" ] || die "'$OUT_DIR' is not a directory"
 [ -z "$VERBOSE" ] || set -x
@@ -110,6 +116,7 @@ command -v createrepo_c >/dev/null || die "required tool not found: createrepo_c
 # Step 1 - Download LTS ISO
 echo -e "\nStep 1 - Downloading ISO..."
 download_iso "${ISO_URL}" "${OUT_DIR}"
+echo "Step 1 - Done."
 
 # Step 2 - Mount LTS ISO
 echo -e "\nStep 2 - Mounting ISO..."
@@ -119,16 +126,18 @@ mount -o loop ${LTS_ISO} ${OUT_DIR}/tmp
 cp -a ${OUT_DIR}/tmp ${ISO_DIR}
 umount ${OUT_DIR}/tmp && rm -rf ${OUT_DIR}/tmp
 chmod a+w ${ISO_DIR} -R
+echo "Step 2 - Done."
 
 # Step 3 - Patch
 echo -e "\nStep 3 - Patching RPM packages..."
 rm -rf ${ISO_DIR}/repodata
 cp ${RPM_DIR}/* ${ISO_DIR}/Packages/.
 createrepo_c ${ISO_DIR} -o ${ISO_DIR}
+echo "Step 3 - Done."
 
 # Step 4 - Rebuild
 echo -e "\nStep 4 - Building ISO..."
-BUILD_ISO="${OUT_DIR}/xcp-ng-${VERSION}-ws.iso"
+BUILD_ISO="${OUT_DIR}/nephora-${TARGET}.iso"
 genisoimage \
     -o "${BUILD_ISO}" \
     ${VERBOSE:- -quiet} \
@@ -139,3 +148,4 @@ genisoimage \
     -no-emul-boot \
     ${ISO_DIR}
 isohybrid ${VERBOSE} --uefi "$BUILD_ISO"
+echo "Step 4 - Done."
