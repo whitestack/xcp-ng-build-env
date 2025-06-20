@@ -112,19 +112,18 @@ cd $(dirname "$0")
 command -v genisoimage >/dev/null || die "required tool not found: genisoimage"
 command -v isohybrid >/dev/null || die "required tool not found: isohybrid (syslinux)"
 command -v createrepo_c >/dev/null || die "required tool not found: createrepo_c"
+command -v bsdtar >/dev/null || die "required tool not found: createrepo_c"
 
 # Step 1 - Download LTS ISO
 echo -e "\nStep 1 - Downloading ISO..."
 download_iso "${ISO_URL}" "${OUT_DIR}"
 echo "Step 1 - Done."
 
-# Step 2 - Mount LTS ISO
-echo -e "\nStep 2 - Mounting ISO..."
-ISO_DIR=${OUT_DIR}/build
-mkdir -p ${OUT_DIR}/tmp
-mount -o loop ${LTS_ISO} ${OUT_DIR}/tmp
-cp -a ${OUT_DIR}/tmp ${ISO_DIR}
-umount ${OUT_DIR}/tmp && rm -rf ${OUT_DIR}/tmp
+# Step 2 - Extract ISO
+echo -e "\nStep 2 - Extract ISO contents..."
+ISO_DIR=${OUT_DIR}/content
+mkdir -p ${ISO_DIR}
+bsdtar -xf ${LTS_ISO} -C ${ISO_DIR}
 chmod a+w ${ISO_DIR} -R
 echo "Step 2 - Done."
 

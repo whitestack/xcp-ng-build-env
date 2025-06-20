@@ -43,7 +43,8 @@ RUN     yum install -y \
             syslinux \
             grub-tools \
             createrepo_c \
-            libfaketime
+            libfaketime \
+            bsdtar
 
 # Niceties
 RUN     yum install -y \
