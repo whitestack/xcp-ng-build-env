@@ -14,10 +14,10 @@ import shutil
 import sys
 import uuid
 
-CONTAINER_PREFIX = "xcp-ng/xcp-ng-build-env"
+CONTAINER_PREFIX = "gcr.io/whitestack-private/nephora/xcp-ng-build-env"
 SRPMS_MOUNT_ROOT = "/tmp/docker-SRPMS"
 
-DEFAULT_BRANCH = '8.3'
+DEFAULT_BRANCH = '8.2'
 DEFAULT_ULIMIT_NOFILE = 1024
 
 RUNNER = os.getenv("XCPNG_OCI_RUNNER")
@@ -113,7 +113,7 @@ def main():
 
     args = parser.parse_args(sys.argv[1:])
 
-    docker_args = [RUNNER, "run", "-i", "-t", "-u", "builder"]
+    docker_args = [RUNNER, "run", "-u", "builder"]
     if is_podman(RUNNER):
         docker_args += ["--userns=keep-id"]
     if os.uname()[4] != "x86_64":
