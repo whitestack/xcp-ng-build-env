@@ -123,7 +123,7 @@ echo "Step 1 - Done."
 echo -e "\nStep 2 - Extract ISO contents..."
 ISO_DIR=${OUT_DIR}/content
 mkdir -p ${ISO_DIR}
-bsdtar -xf ${LTS_ISO} ${ISO_DIR}
+bsdtar -xf ${LTS_ISO} -C ${ISO_DIR}
 chmod a+w ${ISO_DIR} -R
 echo "Step 2 - Done."
 
