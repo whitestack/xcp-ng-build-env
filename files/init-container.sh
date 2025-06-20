@@ -69,6 +69,8 @@ ulimit -s 16384
 if [ -n "$BUILD_LOCAL" ]; then
     pushd ~/rpmbuild
     rm BUILD BUILDROOT RPMS SRPMS -rf
+    ls -la /home/builder/rpmbuild/SOURCES/
+    gzip -t /home/builder/rpmbuild/SOURCES/*.tar.gz
     sudo yum-builddep -y SPECS/*.spec
     # in case the build deps contain xs-opam-repo, source the added profile.d file
     [ ! -f /etc/profile.d/opam.sh ] || source /etc/profile.d/opam.sh
