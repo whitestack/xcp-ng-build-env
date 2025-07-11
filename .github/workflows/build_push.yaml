@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "release/hydron" ]
   pull_request:
-    types: [ "closed" ]
+    types: [opened, edited]
     branches: [ "release/hydron" ]
   workflow_dispatch:
 
