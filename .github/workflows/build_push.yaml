@@ -14,6 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Echo test
+        run: echo "Hi"
+
       - name: Build and push environment image
         shell: bash
         env:
