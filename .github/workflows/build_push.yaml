@@ -3,9 +3,6 @@ name: XCP-ng RPM packages build environment
 on:
   push:
     branches: [ "release/hydron" ]
-  pull_request:
-    types: [opened, edited]
-    branches: [ "release/hydron" ]
   workflow_dispatch:
 
 jobs:
@@ -13,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Echo test
-        run: echo "Hi"
 
       - name: Build and push environment image
         shell: bash
