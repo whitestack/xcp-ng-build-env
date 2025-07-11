@@ -3,9 +3,6 @@ name: XCP-ng RPM packages build environment
 on:
   push:
     branches: [ "release/hydron" ]
-  pull_request:
-    types: [ "closed" ]
-    branches: [ "release/hydron" ]
   workflow_dispatch:
 
 jobs:
