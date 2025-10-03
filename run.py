@@ -17,7 +17,7 @@ import uuid
 CONTAINER_PREFIX = "gcr.io/whitestack-private/nephora/xcp-ng-build-env"
 SRPMS_MOUNT_ROOT = "/tmp/docker-SRPMS"
 
-DEFAULT_BRANCH = '8.2'
+DEFAULT_BRANCH = '8.3'
 DEFAULT_ULIMIT_NOFILE = 1024
 
 RUNNER = os.getenv("XCPNG_OCI_RUNNER")
