@@ -15,25 +15,28 @@ jobs:
       - name: Prepare environment
         run: |
           source env.sh
-          VERSION=${GITHUB_REF##*/}
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          TAG=${GITHUB_REF##*/}
+          echo "TAG=${TAG}" >> $GITHUB_ENV
           echo "XCP_VERSION=${XCP_VERSION}" >> $GITHUB_ENV
           echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
-          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
 
       - name: Build and push environment image
         shell: bash
         env:
           GCP_SA: ${{ secrets.GCP_SERVICE_ACCOUNT }}
         run: |
-          ./build.sh ${XCP_VERSION} "${IMAGE_NAME}:${IMAGE_TAG}"
-          ./push.sh "${IMAGE_NAME}:${IMAGE_TAG}"
+          ./build.sh ${XCP_VERSION} "${IMAGE_NAME}:${TAG}"
+          ./push.sh "${IMAGE_NAME}:${TAG}"
+
+      - name: Delete latest release and tag
+        if: startsWith(github.ref, 'refs/heads/release/')
+        run: gh release delete ${TAG} --cleanup-tag
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          name: ${{ env.VERSION }}
-          tag_name: ${{ env.VERSION }}
+          name: ${{ env.TAG }}
+          tag_name: ${{ env.TAG }}
           body: |
             Whitestack XCP-ng build environment
             - For XCP-ng ${{ env.XCP_VERSION }}

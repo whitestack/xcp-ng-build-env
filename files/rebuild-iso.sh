@@ -15,40 +15,12 @@ die_usage() {
     die "$*"
 }
 
-download_iso() {
-    local iso_url="$1"
-    local output_dir="$2"
-    local iso_index=$(dirname "${iso_url}")
-    local output_file=$(basename "${iso_url}")
-
-    if [[ -z "${iso_url}" || -z "${output_dir}" ]]; then
-        echo "Usage: download_iso <iso_url> <output_dir>"
-        return 1
-    fi
-    [ -d "${output_dir}" ] || die "'${output_dir}' is not a directory"
-
-    echo "Download from URL: ${iso_url}"
-    curl -L -# --fail -o "${output_dir}/${output_file}" "${iso_url}"
-    test -r "${output_dir}/${output_file}" || die "Failed to download ISO."
-
-    echo -e "\nChecksum validation:"
-    local original_checksum=$(curl -L -s --fail "${iso_index}/SHA256SUMS" | grep "${output_file}" | awk '{print $1}')
-    local actual_checksum=$(sha256sum "${output_dir}/${output_file}" | awk '{print $1}')
-    echo "Original: ${original_checksum}"
-    echo "Actual:   ${actual_checksum}"
-    [[ "${actual_checksum}" == "${original_checksum}" ]] || die "Checksum validation failed."
-    
-    LTS_ISO="${output_dir}/${output_file}"
-    VERSION=$(basename "${iso_index}")
-}
-
 usage() {
     cat <<EOF
 Usage: $0 [arguments]
 
 Arguments:
     -t|--target <version>   (mandatory) target version
-    -i|--iso-url <url>      (mandatory) upstream ISO URL
     -r|--rpm-dir <dir>      (mandatory) custom RPM packages directory
     -o|--out-dir <dir>      (mandatory) directory to place rebuild ISO
     -v|--verbose            be talkative
@@ -57,10 +29,8 @@ EOF
 
 VERBOSE=
 VERSION=
-ISO_URL=
 RPM_DIR=
 OUT_DIR=
-LTS_ISO=
 BUILD_ISO=
 while [ $# -ge 1 ]; do
     case "$1" in
@@ -74,11 +44,6 @@ while [ $# -ge 1 ]; do
         -t|--target)
             [ $# -ge 2 ] || die_usage "$1 needs an argument"
             TARGET="$2"
-            shift
-            ;;
-        -i|--iso-url)
-            [ $# -ge 2 ] || die_usage "$1 needs an argument"
-            ISO_URL="$2"
             shift
             ;;
         -r|--rpm-dir)
@@ -102,6 +67,7 @@ while [ $# -ge 1 ]; do
 done
 
 # Validations
+[ -n "${LTS_ISO_PATH}" ] && [ -f "${LTS_ISO_PATH}" ] || die "Path of LTS ISO must be set and should be an existing file"
 [ -n "$TARGET" ] || die "Target version must be specified"
 [ -d "$RPM_DIR" ] || die "'$RPM_DIR' is not a directory"
 [ -d "$OUT_DIR" ] || die "'$OUT_DIR' is not a directory"
@@ -114,28 +80,23 @@ command -v isohybrid >/dev/null || die "required tool not found: isohybrid (sysl
 command -v createrepo_c >/dev/null || die "required tool not found: createrepo_c"
 command -v bsdtar >/dev/null || die "required tool not found: createrepo_c"
 
-# Step 1 - Download LTS ISO
-echo -e "\nStep 1 - Downloading ISO..."
-download_iso "${ISO_URL}" "${OUT_DIR}"
+# Step 1 - Extract ISO
+echo -e "\nStep 1 - Extract ISO contents..."
+ISO_CONTENT=${OUT_DIR}/content
+mkdir -p ${ISO_CONTENT}
+bsdtar -xf ${LTS_ISO_PATH} -C ${ISO_CONTENT}
+chmod a+w ${ISO_CONTENT} -R
 echo "Step 1 - Done."
 
-# Step 2 - Extract ISO
-echo -e "\nStep 2 - Extract ISO contents..."
-ISO_DIR=${OUT_DIR}/content
-mkdir -p ${ISO_DIR}
-bsdtar -xf ${LTS_ISO} -C ${ISO_DIR}
-chmod a+w ${ISO_DIR} -R
+# Step 2 - Patch
+echo -e "\nStep 2 - Patching RPM packages..."
+rm -rf ${ISO_CONTENT}/repodata
+cp ${RPM_DIR}/* ${ISO_CONTENT}/Packages/.
+createrepo_c ${ISO_CONTENT} -o ${ISO_CONTENT}
 echo "Step 2 - Done."
 
-# Step 3 - Patch
-echo -e "\nStep 3 - Patching RPM packages..."
-rm -rf ${ISO_DIR}/repodata
-cp ${RPM_DIR}/* ${ISO_DIR}/Packages/.
-createrepo_c ${ISO_DIR} -o ${ISO_DIR}
-echo "Step 3 - Done."
-
-# Step 4 - Rebuild
-echo -e "\nStep 4 - Building ISO..."
+# Step 3 - Rebuild
+echo -e "\nStep 3 - Building ISO..."
 BUILD_ISO="${OUT_DIR}/xcp_${TARGET}.iso"
 genisoimage \
     -o "${BUILD_ISO}" \
@@ -145,6 +106,6 @@ genisoimage \
     -no-emul-boot -boot-load-size 4 -boot-info-table \
     -eltorito-alt-boot --efi-boot boot/efiboot.img \
     -no-emul-boot \
-    ${ISO_DIR}
+    ${ISO_CONTENT}
 isohybrid ${VERBOSE} --uefi "$BUILD_ISO"
-echo "Step 4 - Done."
+echo "Step 3 - Done."

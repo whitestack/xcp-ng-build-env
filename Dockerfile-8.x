@@ -2,6 +2,9 @@ FROM    centos:7.5.1804
 
 ARG     CUSTOM_BUILDER_UID=""
 ARG     CUSTOM_BUILDER_GID=""
+ARG     ISO_DIR LTS_ISO_NAME
+
+ENV     LTS_ISO_PATH=/home/builder/${LTS_ISO_NAME}
 
 # Remove all repositories
 RUN     rm /etc/yum.repos.d/*
@@ -81,3 +84,4 @@ RUN     mkdir -p /usr/local/bin
 COPY    files/init-container.sh /usr/local/bin/init-container.sh
 COPY    files/rebuild-iso.sh /usr/local/bin/rebuild-iso.sh
 COPY    files/rpmmacros /home/builder/.rpmmacros
+COPY    ${ISO_DIR}/${LTS_ISO_NAME} ${LTS_ISO_PATH}

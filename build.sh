@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+source env.sh
 
 if [ -z "$1" ]; then
     echo "Usage: $0 {version}"
@@ -77,6 +78,13 @@ fi
 # and Docker user "builder" inside the image
 CUSTOM_ARGS+=( "--build-arg" "CUSTOM_BUILDER_UID=${CUSTOM_UID}" )
 CUSTOM_ARGS+=( "--build-arg" "CUSTOM_BUILDER_GID=${CUSTOM_GID}" )
+
+# Download LTS ISO
+[ -d "${ISO_DIR}" ] && sudo rm -rf "${ISO_DIR}" && mkdir -p "${ISO_DIR}" || mkdir -p "${ISO_DIR}"
+wget -O ${ISO_DIR}/${LTS_ISO_NAME} ${LTS_ISO_URL} && echo "${LTS_ISO_SHA} ${ISO_DIR}/${LTS_ISO_NAME}" | sha256sum -c -
+
+CUSTOM_ARGS+=( "--build-arg" "ISO_DIR=${ISO_DIR}" )
+CUSTOM_ARGS+=( "--build-arg" "LTS_ISO_NAME=${LTS_ISO_NAME}" )
 
 "$RUNNER" build \
     "${CUSTOM_ARGS[@]}" \
