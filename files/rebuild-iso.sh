@@ -89,7 +89,9 @@ chmod a+w ${ISO_CONTENT} -R
 echo "Step 1 - Done."
 
 # Step 2 - Patch
-echo -e "\nStep 2 - Patching RPM packages..."
+echo -e "\nStep 2 - Patching isolinux.cfg, grub.cfg and RPM packages..."
+cp /home/builder/isolinux.cfg ${ISO_CONTENT}/boot/isolinux/isolinux.cfg
+cp /home/builder/grub.cfg ${ISO_CONTENT}/EFI/xenserver/grub.cfg
 rm -rf ${ISO_CONTENT}/repodata
 cp ${RPM_DIR}/* ${ISO_CONTENT}/Packages/.
 createrepo_c ${ISO_CONTENT} -o ${ISO_CONTENT}
