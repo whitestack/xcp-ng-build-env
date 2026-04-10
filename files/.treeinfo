@@ -1,0 +1,36 @@
+[platform]
+name = NCE
+version = 1
+
+[branding]
+name = NCE
+version = 1
+
+[system-v1]
+platform_name = NCE
+platform_version = 1
+product_name = NCE
+product_version = 1
+
+[build]
+number = cloud
+[keys]
+key1 = RPM-GPG-KEY-xcpng
+
+[general]
+name = NCE-Hydron-1
+family = NCE
+timestamp = 1749199982.00
+variant =
+version = 1
+packagedir =
+arch = x86_64
+
+[images-x86_64]
+kernel = boot/pxelinux/mboot.c32
+initrd = boot/vmlinuz
+boot.iso = boot/xen.gz
+
+[images-xen]
+kernel = boot/pxelinux/mboot.c32
+initrd = boot/vmlinuz

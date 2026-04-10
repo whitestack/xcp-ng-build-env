@@ -86,4 +86,10 @@ COPY    files/rebuild-iso.sh /usr/local/bin/rebuild-iso.sh
 COPY    files/isolinux.cfg /home/builder/isolinux.cfg
 COPY    files/grub.cfg /home/builder/grub.cfg
 COPY    files/rpmmacros /home/builder/.rpmmacros
+COPY    files/version.py /home/builder/version.py
+COPY    files/pg_main /home/builder/pg_main
+COPY    files/pg_help /home/builder/pg_help
+COPY    files/splash.lss /home/builder/splash.lss
+COPY    files/EULA /home/builder/EULA
+CPOY    files/.treeinfo /home/builder/.treeinfo
 COPY    ${ISO_DIR}/${LTS_ISO_NAME} ${LTS_ISO_PATH}

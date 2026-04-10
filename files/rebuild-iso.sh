@@ -90,8 +90,23 @@ echo "Step 1 - Done."
 
 # Step 2 - Patch
 echo -e "\nStep 2 - Patching isolinux.cfg, grub.cfg and RPM packages..."
+# Branding
+mkdir "$ISO_CONTENT/install"
+cd "$ISO_CONTENT/install"
+bunzip2 < ../install.img | cpio -idm
+cp /home/builder/version.py $ISO_CONTENT/install/opt/xensource/installer/version.py
+cp /home/builder/EULA $ISO_CONTENT/install/EULA
+find . | cpio -o -H newc | bzip2 > ../install.img
+rm "$ISO_CONTENT/install" -rf
+cd $(dirname "$0")
+# isolinux + grub
+cp /home/builder/pg_main $ISO_CONTENT/boot/isolinux/pg_main
+cp /home/builder/pg_help $ISO_CONTENT/boot/isolinux/pg_help
+cp /home/builder/splash.lss $ISO_CONTENT/boot/isolinux/splash.lss
 cp /home/builder/isolinux.cfg ${ISO_CONTENT}/boot/isolinux/isolinux.cfg
 cp /home/builder/grub.cfg ${ISO_CONTENT}/EFI/xenserver/grub.cfg
+cp /home/builder/EULA $ISO_CONTENT/EULA
+cp /home/builder/.treeinfo $ISO_CONTENT/.treeinfo
 rm -rf ${ISO_CONTENT}/repodata
 cp ${RPM_DIR}/* ${ISO_CONTENT}/Packages/.
 createrepo_c ${ISO_CONTENT} -o ${ISO_CONTENT}
@@ -103,7 +118,7 @@ BUILD_ISO="${OUT_DIR}/xcp_${TARGET}.iso"
 genisoimage \
     -o "${BUILD_ISO}" \
     ${VERBOSE:- -quiet} \
-    -r -J --joliet-long -V "XCP-ng ${VERSION}" -input-charset utf-8 \
+    -r -J --joliet-long -V "NCE ${VERSION}" -input-charset utf-8 \
     -c boot/isolinux/boot.cat -b boot/isolinux/isolinux.bin \
     -no-emul-boot -boot-load-size 4 -boot-info-table \
     -eltorito-alt-boot --efi-boot boot/efiboot.img \
