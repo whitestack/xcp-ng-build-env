@@ -91,5 +91,5 @@ COPY    files/pg_main /home/builder/pg_main
 COPY    files/pg_help /home/builder/pg_help
 COPY    files/splash.lss /home/builder/splash.lss
 COPY    files/EULA /home/builder/EULA
-CPOY    files/.treeinfo /home/builder/.treeinfo
+COPY    files/.treeinfo /home/builder/.treeinfo
 COPY    ${ISO_DIR}/${LTS_ISO_NAME} ${LTS_ISO_PATH}
