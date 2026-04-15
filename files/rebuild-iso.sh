@@ -96,7 +96,7 @@ cd "$ISO_CONTENT/install"
 bunzip2 < ../install.img | cpio -idm
 cp /home/builder/version.py $ISO_CONTENT/install/opt/xensource/installer/version.py
 cp /home/builder/EULA $ISO_CONTENT/install/EULA
-find . | cpio -o -H newc | bzip2 > ../install.img
+sudo find . | sudo cpio -o -H newc | bzip2 > ../install.img
 rm "$ISO_CONTENT/install" -rf
 cd $(dirname "$0")
 # isolinux + grub
