@@ -101,7 +101,7 @@ cp /home/builder/pg_help $ISO_CONTENT/boot/isolinux/pg_help
 cp /home/builder/splash.lss $ISO_CONTENT/boot/isolinux/splash.lss
 cp /home/builder/EULA $ISO_CONTENT/EULA
 cp /home/builder/.treeinfo $ISO_CONTENT/.treeinfo
-chroot "$ISO_CONTENT/install"
+sudo chroot "$ISO_CONTENT/install"
 find . | cpio -o -H newc | bzip2 > ../install.img
 exit
 sudo rm "$ISO_CONTENT/install" -rf
