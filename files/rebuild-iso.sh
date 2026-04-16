@@ -97,8 +97,8 @@ bunzip2 < ../install.img | cpio -idm
 cp /home/builder/version.py $ISO_CONTENT/install/opt/xensource/installer/version.py
 cp /home/builder/EULA $ISO_CONTENT/install/EULA
 sudo find . | sudo cpio -o -H newc | bzip2 > ../install.img
-rm "$ISO_CONTENT/install" -rf
 cd $(dirname "$0")
+sudo rm "$ISO_CONTENT/install" -rf
 # isolinux + grub
 cp /home/builder/pg_main $ISO_CONTENT/boot/isolinux/pg_main
 cp /home/builder/pg_help $ISO_CONTENT/boot/isolinux/pg_help
