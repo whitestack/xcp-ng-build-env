@@ -92,12 +92,11 @@ echo "Step 1 - Done."
 echo -e "\nStep 2 - Patching isolinux.cfg, grub.cfg and RPM packages..."
 # Branding
 mkdir "$ISO_CONTENT/install"
-chmod a+w "$ISO_CONTENT/install" -R
 cd "$ISO_CONTENT/install"
 bunzip2 < ../install.img | cpio -idm
 cp /home/builder/version.py $ISO_CONTENT/install/opt/xensource/installer/version.py
 cp /home/builder/EULA $ISO_CONTENT/install/EULA
-find . | cpio -o -H newc | bzip2 > ../install.img
+sudo find . | sudo cpio -o -H newc | bzip2 > ../install.img
 rm "$ISO_CONTENT/install" -rf
 cd $(dirname "$0")
 # isolinux + grub
