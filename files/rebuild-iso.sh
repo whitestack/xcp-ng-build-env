@@ -89,6 +89,7 @@ mkdir "$ISO_CONTENT/install"
 cd "$ISO_CONTENT/install"
 bunzip2 < ../install.img | cpio -idm
 chmod a+w ${ISO_CONTENT} -R
+cd $(dirname "$0")
 echo "Step 1 - Done."
 
 # Step 2 - Branding
@@ -100,8 +101,9 @@ cp /home/builder/pg_help $ISO_CONTENT/boot/isolinux/pg_help
 cp /home/builder/splash.lss $ISO_CONTENT/boot/isolinux/splash.lss
 cp /home/builder/EULA $ISO_CONTENT/EULA
 cp /home/builder/.treeinfo $ISO_CONTENT/.treeinfo
-sudo sh -c 'find . | cpio -o -H newc | bzip2 > ../install.img'
-cd $(dirname "$0")
+chroot "$ISO_CONTENT/install"
+find . | cpio -o -H newc | bzip2 > ../install.img
+exit
 sudo rm "$ISO_CONTENT/install" -rf
 echo "Step 2 - Done."
 

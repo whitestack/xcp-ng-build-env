@@ -1,15 +1,16 @@
-^L
-^Xsplash.lss
 
-^O03Welcome to NCE.^O0f
 
-  - To install or upgrade press the ^O07<ENTER>^O0f key.
-  - To install or upgrade without a serial console, type ^O07no-serial <ENTER>^O0f.
-  - To install or upgrade in safe mode, type ^O07safe <ENTER>^O0f.
-  - To install or upgrade to a multipathed root disk, type ^O07multipath <ENTER>^O0f.
-  - To install or upgrade using an alternate/debug kernel: ^O07install-alt <ENTER>^O0f.
-  - To boot into a shell prompt, type ^O07shell <ENTER>^O0f.
-  - To perform a memory test, type ^O07memtest <ENTER>^O0f.
-  - To open a boot menu and/or edit boot entries, type ^O07menu <ENTER>^O0f.
+splash.lss
 
-^O0f[F1-Standard] [F2-Advanced]^O0f
+03Welcome to NCE.0f
+
+  - To install or upgrade press the 07<ENTER>0f key.
+  - To install or upgrade without a serial console, type 07no-serial <ENTER>0f.
+  - To install or upgrade in safe mode, type 07safe <ENTER>0f.
+  - To install or upgrade to a multipathed root disk, type 07multipath <ENTER>0f.
+  - To install or upgrade using an alternate/debug kernel: 07install-alt <ENTER>0f.
+  - To boot into a shell prompt, type 07shell <ENTER>0f.
+  - To perform a memory test, type 07memtest <ENTER>0f.
+  - To open a boot menu and/or edit boot entries, type 07menu <ENTER>0f.
+
+0f[F1-Standard] [F2-Advanced]0f
