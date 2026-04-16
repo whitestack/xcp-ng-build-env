@@ -80,40 +80,43 @@ command -v isohybrid >/dev/null || die "required tool not found: isohybrid (sysl
 command -v createrepo_c >/dev/null || die "required tool not found: createrepo_c"
 command -v bsdtar >/dev/null || die "required tool not found: createrepo_c"
 
-# Step 1 - Extract ISO
-echo -e "\nStep 1 - Extract ISO contents..."
+# Step 1 - Extract ISO and install.img
+echo -e "\nStep 1 - Extract ISO & install.img contents..."
 ISO_CONTENT=${OUT_DIR}/content
 mkdir -p ${ISO_CONTENT}
 bsdtar -xf ${LTS_ISO_PATH} -C ${ISO_CONTENT}
-chmod a+w ${ISO_CONTENT} -R
-echo "Step 1 - Done."
-
-# Step 2 - Patch
-echo -e "\nStep 2 - Patching isolinux.cfg, grub.cfg and RPM packages..."
-# Branding
 mkdir "$ISO_CONTENT/install"
 cd "$ISO_CONTENT/install"
 bunzip2 < ../install.img | cpio -idm
+chmod a+w ${ISO_CONTENT} -R
+echo "Step 1 - Done."
+
+# Step 2 - Branding
+echo -e "\nStep 2 - Apply branding..."
 cp /home/builder/version.py $ISO_CONTENT/install/opt/xensource/installer/version.py
 cp /home/builder/EULA $ISO_CONTENT/install/EULA
-sudo find . | sudo cpio -o -H newc | bzip2 > ../install.img
-cd $(dirname "$0")
-sudo rm "$ISO_CONTENT/install" -rf
-# isolinux + grub
 cp /home/builder/pg_main $ISO_CONTENT/boot/isolinux/pg_main
 cp /home/builder/pg_help $ISO_CONTENT/boot/isolinux/pg_help
 cp /home/builder/splash.lss $ISO_CONTENT/boot/isolinux/splash.lss
-cp /home/builder/isolinux.cfg ${ISO_CONTENT}/boot/isolinux/isolinux.cfg
-cp /home/builder/grub.cfg ${ISO_CONTENT}/EFI/xenserver/grub.cfg
 cp /home/builder/EULA $ISO_CONTENT/EULA
 cp /home/builder/.treeinfo $ISO_CONTENT/.treeinfo
+find . | cpio -o -H newc | bzip2 > ../install.img
+cd $(dirname "$0")
+rm "$ISO_CONTENT/install" -rf
+echo "Step 2 - Done."
+
+# Step 3 - Patch
+echo -e "\nStep 3 - Patching isolinux.cfg, grub.cfg and RPM packages..."
+# isolinux + grub
+cp /home/builder/isolinux.cfg ${ISO_CONTENT}/boot/isolinux/isolinux.cfg
+cp /home/builder/grub.cfg ${ISO_CONTENT}/EFI/xenserver/grub.cfg
 rm -rf ${ISO_CONTENT}/repodata
 cp ${RPM_DIR}/* ${ISO_CONTENT}/Packages/.
 createrepo_c ${ISO_CONTENT} -o ${ISO_CONTENT}
-echo "Step 2 - Done."
+echo "Step 3 - Done."
 
-# Step 3 - Rebuild
-echo -e "\nStep 3 - Building ISO..."
+# Step 4 - Rebuild
+echo -e "\nStep 4 - Building ISO..."
 BUILD_ISO="${OUT_DIR}/xcp_${TARGET}.iso"
 genisoimage \
     -o "${BUILD_ISO}" \
@@ -125,4 +128,4 @@ genisoimage \
     -no-emul-boot \
     ${ISO_CONTENT}
 isohybrid ${VERBOSE} --uefi "$BUILD_ISO"
-echo "Step 3 - Done."
+echo "Step 4 - Done."
