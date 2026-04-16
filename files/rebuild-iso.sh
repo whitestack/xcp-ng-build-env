@@ -100,9 +100,9 @@ cp /home/builder/pg_help $ISO_CONTENT/boot/isolinux/pg_help
 cp /home/builder/splash.lss $ISO_CONTENT/boot/isolinux/splash.lss
 cp /home/builder/EULA $ISO_CONTENT/EULA
 cp /home/builder/.treeinfo $ISO_CONTENT/.treeinfo
-find . | cpio -o -H newc | bzip2 > ../install.img
+sudo sh -c 'find . | cpio -o -H newc | bzip2 > ../install.img'
 cd $(dirname "$0")
-rm "$ISO_CONTENT/install" -rf
+sudo rm "$ISO_CONTENT/install" -rf
 echo "Step 2 - Done."
 
 # Step 3 - Patch
