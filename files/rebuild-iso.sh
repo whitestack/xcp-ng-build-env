@@ -95,14 +95,16 @@ echo "Step 1 - Done."
 # Step 2 - Branding
 echo -e "\nStep 2 - Apply branding..."
 cp /home/builder/version.py $ISO_CONTENT/install/opt/xensource/installer/version.py
-cp /home/builder/version.py $ISO_CONTENT/install/usr/lib/python*/site-packages/xcp/branding.py
+cp /home/builder/version.py $ISO_CONTENT/install/usr/lib/python3.6/site-packages/xcp/branding.py
+cp /home/builder/version.py $ISO_CONTENT/install/usr/lib/python2.7/site-packages/xcp/branding.py
 
 cp /home/builder/EULA $ISO_CONTENT/install/EULA
+cp /home/builder/EULA $ISO_CONTENT/EULA
 cp /home/builder/pg_main $ISO_CONTENT/boot/isolinux/pg_main
 cp /home/builder/pg_help $ISO_CONTENT/boot/isolinux/pg_help
 cp /home/builder/splash.lss $ISO_CONTENT/boot/isolinux/splash.lss
-cp /home/builder/EULA $ISO_CONTENT/EULA
 cp /home/builder/.treeinfo $ISO_CONTENT/.treeinfo
+
 sudo chroot "$ISO_CONTENT/install" /bin/bash <<EOF
 find . | cpio -o -H newc | bzip2 > ../install.img
 exit
