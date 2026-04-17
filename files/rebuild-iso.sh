@@ -110,7 +110,6 @@ find . | cpio -o -H newc | bzip2 > ../install.img
 '
 
 sudo rm "$ISO_CONTENT/install" -rf
-cd $(dirname "$0")
 echo "Step 2 - Done."
 
 # Step 3 - Patch
@@ -125,6 +124,7 @@ echo "Step 3 - Done."
 
 # Step 4 - Rebuild
 echo -e "\nStep 4 - Building ISO..."
+cd "$ISO_CONTENT" 
 BUILD_ISO="${OUT_DIR}/xcp_${TARGET}.iso"
 genisoimage \
     -o "${BUILD_ISO}" \
@@ -132,8 +132,8 @@ genisoimage \
     -r -J --joliet-long -V "NCE ${VERSION}" -input-charset utf-8 \
     -c boot/isolinux/boot.cat -b boot/isolinux/isolinux.bin \
     -no-emul-boot -boot-load-size 4 -boot-info-table \
-    -eltorito-alt-boot --efi-boot boot/efiboot.img \
+    -eltorito-alt-boot -e boot/efiboot.img \
     -no-emul-boot \
-    ${ISO_CONTENT}
+    .
 isohybrid ${VERBOSE} --uefi "$BUILD_ISO"
 echo "Step 4 - Done."
