@@ -95,7 +95,7 @@ echo "Step 1 - Done."
 # Step 2 - Branding
 echo -e "\nStep 2 - Apply branding..."
 cp /home/builder/version.py $ISO_CONTENT/install/opt/xensource/installer/version.py
-cp /home/builder/version.py $ISO_CONTENT/install/usr/lib/python3.6/site-packages/xcp/branding.py
+cp /home/builder/version.py $ISO_CONTENT/install/usr/lib/python*/site-packages/xcp/branding.py
 
 cp /home/builder/EULA $ISO_CONTENT/install/EULA
 cp /home/builder/pg_main $ISO_CONTENT/boot/isolinux/pg_main
