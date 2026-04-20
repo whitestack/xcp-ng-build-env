@@ -86,10 +86,12 @@ ISO_CONTENT=${OUT_DIR}/content
 mkdir -p ${ISO_CONTENT}
 bsdtar -xf ${LTS_ISO_PATH} -C ${ISO_CONTENT}
 mkdir "$ISO_CONTENT/install"
+
 sudo bash -c '
 cd "'"$ISO_CONTENT"'/install" &&
 bunzip2 < ../install.img | cpio -idm
 '
+
 chmod a+w ${ISO_CONTENT} -R
 echo "Step 1 - Done."
 
