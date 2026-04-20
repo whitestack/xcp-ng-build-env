@@ -92,7 +92,7 @@ cd "'"$ISO_CONTENT"'/install" &&
 bunzip2 < ../install.img | cpio -idm
 '
 
-chmod a+w ${ISO_CONTENT} -R
+sudo chmod a+w ${ISO_CONTENT} -R
 echo "Step 1 - Done."
 
 # Step 2 - Branding
