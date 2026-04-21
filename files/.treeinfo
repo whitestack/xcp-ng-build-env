@@ -7,10 +7,10 @@ name = NCE
 version = hydron-1
 
 [system-v1]
-platform_name = XCP
-platform_version = 3.4.0
-product_name = XCP-ng
-product_version = 8.3.0
+platform_name = NCE
+platform_version = hydron-1
+product_name = NCE
+product_version = hydron-1
 
 [build]
 number = cloud
