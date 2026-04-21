@@ -18,11 +18,11 @@ number = cloud
 key1 = RPM-GPG-KEY-xcpng
 
 [general]
-name = XCP-ng-8.3.0
-family = XCP-ng
+name = NCE-hydron-1
+family = NCE
 timestamp = 1749199982.00
 variant =
-version = 8.3.0
+version = hydron-1
 packagedir =
 arch = x86_64
 
