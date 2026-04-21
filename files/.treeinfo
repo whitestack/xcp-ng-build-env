@@ -3,8 +3,8 @@ name = XCP
 version = 3.4.0
 
 [branding]
-name = XCP-ng
-version = 8.3.0
+name = NCE
+version = hydron-1
 
 [system-v1]
 platform_name = XCP
