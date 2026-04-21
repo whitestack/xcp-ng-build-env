@@ -4,13 +4,13 @@ version = 3.4.0
 
 [branding]
 name = NCE
-version = hydron-1
+version = "hydron-1"
 
 [system-v1]
 platform_name = NCE
-platform_version = hydron-1
+platform_version = "hydron-1"
 product_name = NCE
-product_version = hydron-1
+product_version = "hydron-1"
 
 [build]
 number = cloud
@@ -18,11 +18,11 @@ number = cloud
 key1 = RPM-GPG-KEY-xcpng
 
 [general]
-name = NCE-hydron-1
+name = NCE
 family = NCE
 timestamp = 1749199982.00
 variant =
-version = 1.0.0
+version = "Hydron-1.0.0"
 packagedir =
 arch = x86_64
 
