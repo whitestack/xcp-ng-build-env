@@ -1,8 +1,7 @@
-The programs included with the NCE system are free software.
+The NCE system is a proprietary software distribution provided by Whitestack.
 
-The license terms for each program can be found in the /usr/share/doc/* directories.
+NCE includes components developed by Whitestack as well as third-party software licensed under various open-source licenses. The license terms for such open-source components can be found in the /usr/share/doc/* directories or other accompanying documentation.
 
-NCE comes with no warranty, to the extent permitted by applicable law.
+All rights, title, and interest in the NCE distribution, including its branding, packaging, and proprietary components, are owned by Whitestack or its licensors.
 
-Please visit whitestack.org for more information about NCE
-and for professional support options.
+For more information about NCE and available support options, please contact Whitestack.
