@@ -8,9 +8,9 @@ version = hydron-1
 
 [system-v1]
 platform_name = NCE
-platform_version = 1
-product_name = NCE-hydron
-product_version = 1
+platform_version = hydron-1
+product_name = NCE
+product_version = hydron-1
 
 [build]
 number = cloud
@@ -22,7 +22,7 @@ name = NCE-hydron-1
 family = NCE
 timestamp = 1749199982.00
 variant =
-version = hydron-1
+version = 1.0.0
 packagedir =
 arch = x86_64
 
