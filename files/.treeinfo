@@ -8,9 +8,9 @@ version = hydron-1
 
 [system-v1]
 platform_name = NCE
-platform_version = hydron-1
-product_name = NCE
-product_version = hydron-1
+platform_version = 1
+product_name = NCE-hydron
+product_version = 1
 
 [build]
 number = cloud
