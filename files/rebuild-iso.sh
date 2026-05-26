@@ -130,7 +130,7 @@ echo "Step 3 - Done."
 # Step 4 - Rebuild
 echo -e "\nStep 4 - Building ISO..."
 cd "$ISO_CONTENT" 
-BUILD_ISO="${OUT_DIR}/xcp_${TARGET}.iso"
+BUILD_ISO="${OUT_DIR}/nce_${TARGET}.iso"
 genisoimage \
     -o "${BUILD_ISO}" \
     ${VERBOSE:- -quiet} \
