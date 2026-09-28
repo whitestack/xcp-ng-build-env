@@ -36,6 +36,7 @@ RUN     yum install -y \
             git \
             make \
             rpm-build \
+            rpm-sign \
             redhat-rpm-config \
             rpm-python \
             sudo \
@@ -59,6 +60,12 @@ RUN     yum install -y \
 RUN     yum install -y --enablerepo=epel \
             gnupg1 \
             lftp
+
+# Fail the image build if any tool required by the RPM signing flow is missing
+RUN     test -x /usr/bin/rpm \
+        && test -x /usr/bin/rpmsign \
+        && test -x /usr/bin/gpg1 \
+        && test -x /usr/bin/createrepo_c
 
 # OCaml in XS may be older than in CentOS
 RUN     sed -i "/gpgkey/a exclude=ocaml*" /etc/yum.repos.d/Cent* /etc/yum.repos.d/epel*
